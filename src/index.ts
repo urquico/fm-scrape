@@ -1,7 +1,6 @@
 import puppeteer from "puppeteer";
 import { setTimeout } from "node:timers/promises";
 import XSLX from "xlsx";
-import "dotenv/config";
 
 (async () => {
   try {
@@ -25,14 +24,15 @@ import "dotenv/config";
     // accountName: document.querySelector("#search_user-item-user-link-97 > a.e10wilco3.css-18z0n14-StyledLink-StyledDivInfoWrapper.er1vbsz0 > p.css-1n1o5vj-DivSubTitleWrapper.e10wilco5")
     // href: document.querySelector("#search_user-item-user-link-0 > a.e10wilco3.css-18z0n14-StyledLink-StyledDivInfoWrapper.er1vbsz0")
     // store it in a variable named fmAccs
-    const fmAccs: { tiktokName: string; accountName: string; link: string }[] = await page.evaluate(
-      () => {
+    const fmAccs: { tiktokName: string; accountName: string; bio: string; link: string }[] =
+      await page.evaluate(() => {
         const fmAccs: any[] = [];
         const fmAccsEl = document.querySelectorAll("#tabs-0-panel-search_account > div > div");
         fmAccsEl.forEach((fmAcc) => {
           if (fmAcc) {
             const fmTiktok = fmAcc.querySelector("a > p:first-child")?.textContent || "";
             const fmAccName = fmAcc.querySelector("a > p:nth-child(2)")?.textContent || "";
+            const fmBio = fmAcc.querySelector("a > p:nth-child(3)")?.textContent || "";
             const fmAccLink = fmAcc.querySelector("a")?.getAttribute("href");
 
             // if fmTiktok, fmAccName or fmAccLink includes ['franklin', 'frank', 'miano', 'msb'], push it to fmAccs
@@ -50,13 +50,17 @@ import "dotenv/config";
               fmAccLink?.toLowerCase().includes("miano") ||
               fmAccLink?.toLowerCase().includes("msb")
             ) {
-              fmAccs.push({ tiktokName: fmTiktok, accountName: fmAccName, link: fmAccLink });
+              fmAccs.push({
+                tiktokName: fmTiktok,
+                accountName: fmAccName,
+                bio: fmBio,
+                link: fmAccLink,
+              });
             }
           }
         });
         return fmAccs;
-      }
-    );
+      });
 
     console.log("Done getting all the accounts");
     console.log("Now writing to excel file");
