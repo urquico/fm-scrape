@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && (node ./dst/index.js)",
-    "clean": "tsc && (node ./dst/clean.js)"
+    "clean": "tsc && (node ./dst/clean.js)",
+    "profile": "tsc && (node ./dst/checkprofile.js)"
   },
   "author": "Urquico",
   "license": "ISC",
